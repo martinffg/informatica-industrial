@@ -1,13 +1,14 @@
 Proyecto Informatica Industrial
 
 Alumnos:
-Ignacio Luna Echechuri
-Martín Fernández Gamen
+* Ignacio Luna Echechuri
+
+* Martín Fernández Gamen
 
 ---------------------------------------------------------------------------------------------
 Para correr este proyecto requieres:
 
-* version mas actualizada de Java.
+* Java SDK 1.7 (última librería que soporta Swing nativo).
 
 * el SDK de la camara Kinect, en su version mas reciente. 
 Link: http://www.microsoft.com/en-us/download/details.aspx?id=44561
