@@ -1,5 +1,10 @@
-# roboticaUntref
+Proyecto Informatica Industrial
 
+Alumnos:
+Ignacio Luna Echechuri
+Martín Fernández Gamen
+
+---------------------------------------------------------------------------------------------
 Para correr este proyecto requieres:
 
 * version mas actualizada de Java.
@@ -11,5 +16,7 @@ Link: http://www.microsoft.com/en-us/download/details.aspx?id=44561
 
 * incluir en el proyecto las librerias que estan dentro del zip "libreriasNecesarias".
 Dichas librerias contienen los metodos que usa la clase Kinect.
-
+---------------------------------------------------------------------------------------------
+Créditos: Basado en proyecto Robótica - Adquisición de Datos de:
+Matías Mariani y Martín Fernández Gamen
 
