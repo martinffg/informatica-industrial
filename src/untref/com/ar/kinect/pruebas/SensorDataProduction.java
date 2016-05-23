@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 public class SensorDataProduction implements SensorData {
 
 	private byte[] colorFrame;
@@ -275,6 +276,80 @@ public class SensorDataProduction implements SensorData {
 		}
 		
 		return estadoExportacion;	
+	}
+	
+	public Imagen pasarFiltroDeSobelUmbral(int umbral) {
+		Imagen buff = (Imagen) this.imagenColor;
+		Imagen salida=null;
+		if (buff!=null){
+			Integer[][] matrizResultado =new Integer[buff.getWidth()][buff.getHeight()];
+			int[][] matrizMascaraY= {{-1,-2,-1},{0,0,0},{1,2,1}};
+			int[][] matrizMascaraX={{-1,0,1},{-2,0,2},{-1,0,1}};
+			// Obtengo la matriz de magnitud de borde
+			matrizResultado =obtenerMatrizPyS(buff, buff.getWidth(), buff.getHeight(), matrizMascaraX, matrizMascaraY);
+			// Aplico la TL a la matriz de borde
+			salida = umbralizarPyS(matrizResultado,buff.getWidth(),buff.getHeight(), umbral);
+		}
+		return salida;
+	}
+	
+	private Integer[][] obtenerMatrizPyS(BufferedImage buff, int ancho, int alto, int[][] matrizMascaraX,
+			int[][] matrizMascaraY) {
+		int[][] matriX =new int[ancho][alto];
+		int[][] matriY =new int[ancho][alto];
+		Integer[][] matrizResultado =new Integer[ancho][alto];
+		int grisX =0;
+		int grisY =0;
+		for (int i=0; i < ancho; i++){
+			for(int j =0; j < alto; j++){
+				matriX[i][j]=0;
+				matriY[i][j]=0;
+			}
+		}
+		for (int i=0; i <= ancho-3; i++){
+			for(int j =0; j <= alto-3; j++){
+				for (int k=0; k < 3; k++){
+					for(int m =0; m < 3; m++){		
+						grisX = grisX + calcularPromedio(buff.getRGB(i+k, j+m))*matrizMascaraX[k][m]; 
+						grisY = grisY + calcularPromedio(buff.getRGB(i+k, j+m))*matrizMascaraY[k][m]; 
+					}
+				}
+				
+				matriX[i+1][j+1]=grisX;
+				matriY[i+1][j+1]=grisY;
+				grisX=0;
+				grisY=0;
+			}
+		}
+		for (int i=0; i < ancho; i++){
+			for(int j =0; j < alto; j++){
+				matrizResultado[i][j]=(int) Math.sqrt(Math.pow(matriX[i][j],2) + Math.pow(matriY[i][j],2));
+			}
+		}
+		return matrizResultado;
+	}
+	
+	private Imagen umbralizarPyS(Integer[][] matrizResultado, int ancho,int alto, int umbral){
+		Color blanco=new Color(255,255,255);
+		Color negro=new Color(0,0,0);
+		Imagen salida =new Imagen(ancho, alto);
+		for (int i=0; i < ancho; i++){
+			for(int j =0; j < alto; j++){
+				if(matrizResultado[i][j]>=umbral){
+					salida.setRGB(i, j, blanco.getRGB());
+				}else{
+					salida.setRGB(i, j, negro.getRGB());
+				}
+			}
+		}
+		return salida;
+	}
+	
+	private int calcularPromedio(int rgb) {
+		int promedio;
+		Color c = new Color(rgb);
+		promedio = (int)((c.getBlue()+c.getGreen()+c.getRed())/3);
+		return promedio;
 	}
 		
 }

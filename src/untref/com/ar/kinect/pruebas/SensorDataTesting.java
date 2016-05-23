@@ -59,4 +59,10 @@ public class SensorDataTesting implements SensorData {
 		return true;
 	}
 
+	@Override
+	public Imagen pasarFiltroDeSobelUmbral(int umbral) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

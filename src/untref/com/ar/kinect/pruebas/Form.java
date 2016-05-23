@@ -51,6 +51,7 @@ public class Form extends JFrame implements ActionListener {
 	private JLabel label_altura_value;
 	private JLabel label_distancia_value;
 	private JLabel label_scrollBar;
+	private JLabel label_scrollBarBordes;
 	private JLabel label_Nota;
 	private JRadioButton radioAlturaSupPlana;
 	private JRadioButton radioAlturaSupCurva;
@@ -66,14 +67,15 @@ public class Form extends JFrame implements ActionListener {
 	private JLabel label_ColoresContorno;
 	private JLabel label_RutaDeArchivo;
 	private JScrollBar scrollBar;
+	private JScrollBar scrollBarBordes;
 	private float alpha;
 	private int valorAltura;
 	private boolean testing;
-
 	private JMenu menuVistas;
 	private JMenu menuAyuda;
 	private JPanel panelDeOpciones;
-	private boolean colorSeleccionado,profundidadSeleccionada,ambosSeleccionado,alturaSeleccionada, curvasDeNivelSeleccionado, importarDatosSeleccionado;
+	private JPanel panelDeOpcionesBordes;
+	private boolean colorSeleccionado,profundidadSeleccionada,ambosSeleccionado,alturaSeleccionada, curvasDeNivelSeleccionado, importarDatosSeleccionado,bordesSeleccionado;
 	
 	private void setOpcionesDeSeleccion(boolean valor){
 		
@@ -83,6 +85,7 @@ public class Form extends JFrame implements ActionListener {
 		alturaSeleccionada = valor;
 		curvasDeNivelSeleccionado = valor;
 		importarDatosSeleccionado = valor;
+		bordesSeleccionado=valor;
 	}
 	
 	public void setValorAltura(int altura){
@@ -133,6 +136,12 @@ public class Form extends JFrame implements ActionListener {
 			importarDatosSeleccionado = true;
 		}
 		
+		if (e.getSource() == menuVistas.getItem(6)){			 
+			title = "Opciones de Bordes";
+			this.setVisibilidadScrollBarBordes(true);
+			bordesSeleccionado = true;
+		}
+		
 		if (e.getSource() == menuAyuda.getItem(1)){
 			
 			try {
@@ -156,6 +165,7 @@ public class Form extends JFrame implements ActionListener {
 		}
 		
 		panelDeOpciones.setBorder(BorderFactory.createTitledBorder(border,title, TitledBorder.CENTER, TitledBorder.TOP, null, Color.BLUE));
+		panelDeOpcionesBordes.setBorder(BorderFactory.createTitledBorder(border,title, TitledBorder.CENTER, TitledBorder.TOP, null, Color.BLUE));
 	 }	    
 	 
 	public Form(Boolean esTest) {
@@ -248,7 +258,6 @@ public class Form extends JFrame implements ActionListener {
 				
 		this.construirMatrizResultados();			
 		this.contruirPanelDeOpciones();	
-
 	}
 	
 	private JMenu construirMenuVistas(){
@@ -278,6 +287,10 @@ public class Form extends JFrame implements ActionListener {
         JMenuItem mi5=new JMenuItem("Exportar Datos");
         mi5.addActionListener(this);
         menuVistas.add(mi5);
+        
+        JMenuItem mi6=new JMenuItem("Imagenes de Bordes");
+        mi6.addActionListener(this);
+        menuVistas.add(mi6);
         
        return menuVistas;
 	}
@@ -400,10 +413,17 @@ public class Form extends JFrame implements ActionListener {
 	
 private void opcionesAmbos(){
 		
-		BasicComponentBuilder builder = new BasicComponentBuilder(this,panelDeOpciones);
-		label_scrollBar = builder.construirLabel("Modifique la tonalidad de la imagen", 0, 1);
-		scrollBar = builder.construirScrollBar(0, 2);
-		alpha = 0.50f;
+	BasicComponentBuilder builder = new BasicComponentBuilder(this,panelDeOpciones);
+	label_scrollBar = builder.construirLabel("Modifique la tonalidad de la imagen", 0, 1);
+	scrollBar = builder.construirScrollBar(0, 2);
+	alpha = 0.50f;
+}
+
+private void opcionesBordes(){
+	
+	BasicComponentBuilder builder = new BasicComponentBuilder(this,panelDeOpciones);
+	label_scrollBarBordes = builder.construirLabel("Modifique el umbral de la imagen", 0, 1);
+	scrollBarBordes = builder.construirScrollBar(0, 2);
 }
 	
 	//Construir del panel de acciones
@@ -414,6 +434,7 @@ private void opcionesAmbos(){
 		this.opcionesDeCurvasDeNivel();
 		this.opcionesDeAltura();
 		this.opcionesDeExportarDeDatos();
+		this.opcionesBordes();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(10, 10, 10, 10);
@@ -495,6 +516,11 @@ private void opcionesAmbos(){
 		label_BarridoPixeles.setVisible(bool);
 		combo_coloresContorno.setVisible(bool);
 		label_ColoresContorno.setVisible(bool);
+	}
+	
+	private void setVisibilidadScrollBarBordes(boolean bool){
+		label_scrollBarBordes.setVisible(bool);
+		scrollBarBordes.setVisible(bool);
 	}
 		
 	private void setVisibilidadFiltrosCurvasDeNivel(boolean bool){
@@ -623,6 +649,11 @@ private void opcionesAmbos(){
 		else 
 			this.setVisibilidadScrollBar(false);
 		
+		if (bordesSeleccionado){
+			int umbral=128;
+			imagen = data.pasarFiltroDeSobelUmbral(umbral);
+		}else this.setVisibilidadScrollBarBordes(false);
+				
 		if (curvasDeNivelSeleccionado){									
 			
 			int intervalo = Integer.parseInt(input_IntervaloEntreCurvas.getText().isEmpty()?"3":input_IntervaloEntreCurvas.getText());			
