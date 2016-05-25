@@ -19,6 +19,7 @@ public class SensorDataProduction implements SensorData {
 	private int height;
 	private BufferedImage imagenColor;
 	private BufferedImage imagenProfundidad;
+	private BufferedImage imagenBordes;
 	private Form form;
 
 	public void setForm(Form newForm){
@@ -278,9 +279,10 @@ public class SensorDataProduction implements SensorData {
 		return estadoExportacion;	
 	}
 	
-	public Imagen pasarFiltroDeSobelUmbral(int umbral) {
-		Imagen buff = (Imagen) this.imagenColor;
-		Imagen salida=null;
+	public BufferedImage getImagenBordes() {
+		int umbral=128;
+		BufferedImage buff = this.imagenColor;
+		BufferedImage salida=null;
 		if (buff!=null){
 			Integer[][] matrizResultado =new Integer[buff.getWidth()][buff.getHeight()];
 			int[][] matrizMascaraY= {{-1,-2,-1},{0,0,0},{1,2,1}};
@@ -329,10 +331,10 @@ public class SensorDataProduction implements SensorData {
 		return matrizResultado;
 	}
 	
-	private Imagen umbralizarPyS(Integer[][] matrizResultado, int ancho,int alto, int umbral){
+	private BufferedImage umbralizarPyS(Integer[][] matrizResultado, int ancho,int alto, int umbral){
 		Color blanco=new Color(255,255,255);
 		Color negro=new Color(0,0,0);
-		Imagen salida =new Imagen(ancho, alto);
+		BufferedImage salida = new BufferedImage(ancho,alto,1);
 		for (int i=0; i < ancho; i++){
 			for(int j =0; j < alto; j++){
 				if(matrizResultado[i][j]>=umbral){

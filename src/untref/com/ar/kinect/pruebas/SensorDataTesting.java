@@ -60,7 +60,7 @@ public class SensorDataTesting implements SensorData {
 	}
 
 	@Override
-	public Imagen pasarFiltroDeSobelUmbral(int umbral) {
+	public BufferedImage getImagenBordes() {
 		// TODO Auto-generated method stub
 		return null;
 	}

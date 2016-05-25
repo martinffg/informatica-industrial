@@ -21,6 +21,6 @@ public interface SensorData {
 	
 	public boolean exportarDatos(String path);
 	
-	public Imagen pasarFiltroDeSobelUmbral(int umbral);
+	public BufferedImage getImagenBordes();
 	
 }

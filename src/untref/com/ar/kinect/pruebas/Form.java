@@ -650,8 +650,7 @@ private void opcionesBordes(){
 			this.setVisibilidadScrollBar(false);
 		
 		if (bordesSeleccionado){
-			int umbral=128;
-			imagen = data.pasarFiltroDeSobelUmbral(umbral);
+			imagen = data.getImagenBordes();
 		}else this.setVisibilidadScrollBarBordes(false);
 				
 		if (curvasDeNivelSeleccionado){									
