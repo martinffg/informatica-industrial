@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Timer;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -422,7 +421,7 @@ private void opcionesAmbos(){
 private void opcionesBordes(){
 	
 	BasicComponentBuilder builder = new BasicComponentBuilder(this,panelDeOpciones);
-	label_scrollBarBordes = builder.construirLabel("Modifique el umbral de la imagen", 0, 1);
+	label_scrollBarBordes = builder.construirLabel("Umbral de la imagen: ",0, 1); //+data.getUmbralOptimoOtsu()
 	scrollBarBordes = builder.construirScrollBar(0, 2);
 }
 	

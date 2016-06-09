@@ -17,9 +17,10 @@ public class SensorDataProduction implements SensorData {
 	private double[][] matrizProfundidad;
 	private int width;
 	private int height;
+	private int umbralOptimoOtsu;
 	private BufferedImage imagenColor;
 	private BufferedImage imagenProfundidad;
-	private BufferedImage imagenBordes;
+	//private BufferedImage imagenBordes;
 	private Form form;
 
 	public void setForm(Form newForm){
@@ -40,6 +41,7 @@ public class SensorDataProduction implements SensorData {
 		
 		this.width = kinect.getColorWidth();
 		this.height = kinect.getColorHeight();
+		this.umbralOptimoOtsu= 128;
 
 		this.construirMatrizColor();
 		this.construirMatrizProfundidad();
@@ -280,7 +282,7 @@ public class SensorDataProduction implements SensorData {
 	}
 	
 	public BufferedImage getImagenBordes() {
-		int umbral=128;
+		//int umbral=200;
 		BufferedImage buff = this.imagenColor;
 		BufferedImage salida=null;
 		if (buff!=null){
@@ -289,9 +291,28 @@ public class SensorDataProduction implements SensorData {
 			int[][] matrizMascaraX={{-1,0,1},{-2,0,2},{-1,0,1}};
 			// Obtengo la matriz de magnitud de borde
 			matrizResultado =obtenerMatrizPyS(buff, buff.getWidth(), buff.getHeight(), matrizMascaraX, matrizMascaraY);
+			Imagen matrizResultadoBuff = convertirMatrizEnBuff(matrizResultado,buff.getWidth(), buff.getHeight()); 
 			// Aplico la TL a la matriz de borde
-			salida = umbralizarPyS(matrizResultado,buff.getWidth(),buff.getHeight(), umbral);
+			//salida = umbralizarPyS(matrizResultado,buff.getWidth(),buff.getHeight(), umbral);
+			salida = umbralizarConOtsu(matrizResultadoBuff);
 		}
+				
+		return salida;
+	}
+	
+	private Imagen convertirMatrizEnBuff(Integer[][] matrizResultado, int ancho,int alto){
+		Imagen salida = new Imagen(ancho,alto);
+		int valor=0;
+		int maximo=buscarMaximo(matrizResultado,ancho,alto);
+		int minimo=buscarMinimo(matrizResultado,ancho,alto);
+		
+		for(int i=0;i<ancho;i++){
+			for(int j=0;j<alto;j++){
+				valor=(int)transformacionLineal(matrizResultado[i][j],maximo,minimo);
+				salida.setValorPixel(i,j,new Color(valor,valor,valor));
+			}
+		}
+		
 		return salida;
 	}
 	
@@ -331,6 +352,7 @@ public class SensorDataProduction implements SensorData {
 		return matrizResultado;
 	}
 	
+	@SuppressWarnings("unused")
 	private BufferedImage umbralizarPyS(Integer[][] matrizResultado, int ancho,int alto, int umbral){
 		Color blanco=new Color(255,255,255);
 		Color negro=new Color(0,0,0);
@@ -353,5 +375,123 @@ public class SensorDataProduction implements SensorData {
 		promedio = (int)((c.getBlue()+c.getGreen()+c.getRed())/3);
 		return promedio;
 	}
-		
+	
+	public Imagen umbralizarConOtsu(Imagen buff) {
+		Imagen salida=null;
+		int umbralOptimo=0;
+		double gw=0;
+		double gwMaximo=0;
+		Color blanco=new Color(255,255,255);
+		Color negro=new Color(0,0,0);
+		if (buff!=null){
+			int pixeles= buff.getHeight()*buff.getWidth();
+		    salida= new Imagen(buff.getWidth(), buff.getHeight());	
+			int[] histograma = histograma(buff);
+			double[] ocurrencia= new double[256];
+			for (int i=0; i < 256; i++){
+				ocurrencia[i]=(double) histograma[i]/pixeles;		
+			}
+			gwMaximo=calculoVarianza(0,ocurrencia);
+			for(int umbral =1; umbral < 256; umbral++){
+				gw=calculoVarianza(umbral,ocurrencia);
+				if(gw > gwMaximo){
+					gwMaximo=gw;
+					umbralOptimo=umbral;
+				}	
+			}
+			
+			this.setUmbralOptimoOtsu(umbralOptimo);
+			
+			for (int i=0; i < buff.getWidth(); i++){
+				for(int j =0; j < buff.getHeight(); j++){
+					if(calcularPromedio(buff.getRGB(i, j)) >= umbralOptimo){
+						salida.setRGB(i, j, blanco.getRGB());
+					}else{
+						salida.setRGB(i, j, negro.getRGB());
+					}
+				}
+			}
+		}
+		return salida;
+	}
+	
+	public int[] histograma(Imagen buff){
+        int histograma[]=new int[256];
+        for( int i = 0; i < buff.getWidth(); i++ ){
+            for( int j = 0; j < buff.getHeight(); j++ ){
+                histograma[calcularPromedio(buff.getRGB(i, j))]+=1;
+            }
+        }
+        return histograma;
+    }
+	
+	private double calculoVarianza(int umbral, double[] ocurrencia){
+		double w1=0;
+		double w2=0;
+		double u1=0;
+		double u2=0;
+		double ut=0;
+		double gb=0;
+		for(int i =0; i < 256; i++){
+			if(i<umbral){
+				w1+=ocurrencia[i];
+			}else{
+				w2+=ocurrencia[i];
+			}
+		}
+		for(int i =0; i < 256; i++){
+			if(i<umbral){
+				u1+=i*ocurrencia[i];
+			}else{
+				u2+=i*ocurrencia[i];
+			}
+		}
+		if(w1!=0){
+			u1=(double) u1/w1;
+		}
+		if(w2!=0){
+			u2=(double) u2/w2;
+		}
+		ut=w1*u1 + w2*u2;
+		gb=w1*Math.pow(u1-ut,2) + w2*Math.pow(u2-ut,2);	
+		return gb;
+	}
+
+	private double transformacionLineal(double suma, double max, double min) {
+		double salida = suma*(255/(max-min))+(255-((255*max)/(max-min)));
+		return salida;
+	}
+	
+	public int buscarMaximo(Integer [][] matriz,int ancho,int alto) {
+		int max = matriz[0][0];
+		for (int i=0; i < ancho; i++){
+			for(int j =0; j < alto; j++){
+				if (max < matriz[i][j]) {
+					max = matriz[i][j];
+				}
+			}
+		}
+		return max;
+	}
+	
+	public int buscarMinimo(Integer [][] matriz,int ancho,int alto) {
+		int min = matriz[0][0];
+		for (int i=0; i < ancho; i++){
+			for(int j =0; j < alto; j++){
+				if (min > matriz[i][j]) {
+					min = matriz[i][j];
+				}
+			}
+		}
+		return min;
+	}
+
+	@Override	
+	public int getUmbralOptimoOtsu() {
+		return umbralOptimoOtsu;
+	}
+
+	private void setUmbralOptimoOtsu(int umbralOptimoOtsu) {
+		this.umbralOptimoOtsu = umbralOptimoOtsu;
+	}
 }

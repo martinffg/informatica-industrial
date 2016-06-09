@@ -23,4 +23,5 @@ public interface SensorData {
 	
 	public BufferedImage getImagenBordes();
 	
+	public int getUmbralOptimoOtsu();	
 }

@@ -64,5 +64,9 @@ public class SensorDataTesting implements SensorData {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	@Override
+	public int getUmbralOptimoOtsu(){
+		return 0;
+	};	
+	
 }
