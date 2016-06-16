@@ -50,7 +50,7 @@ public class Form extends JFrame implements ActionListener {
 	private JLabel label_altura_value;
 	private JLabel label_distancia_value;
 	private JLabel label_scrollBar;
-	private JLabel label_scrollBarBordes;
+	//private JLabel label_scrollBarBordes;
 	private JLabel label_Nota;
 	private JRadioButton radioAlturaSupPlana;
 	private JRadioButton radioAlturaSupCurva;
@@ -66,7 +66,7 @@ public class Form extends JFrame implements ActionListener {
 	private JLabel label_ColoresContorno;
 	private JLabel label_RutaDeArchivo;
 	private JScrollBar scrollBar;
-	private JScrollBar scrollBarBordes;
+	//private JScrollBar scrollBarBordes;
 	private float alpha;
 	private int valorAltura;
 	private boolean testing;
@@ -136,8 +136,8 @@ public class Form extends JFrame implements ActionListener {
 		}
 		
 		if (e.getSource() == menuVistas.getItem(6)){			 
-			title = "Opciones de Bordes";
-			this.setVisibilidadScrollBarBordes(true);
+			//title = "";//"Panel de Bordes";
+			//this.setVisibilidadScrollBarBordes(false);
 			bordesSeleccionado = true;
 		}
 		
@@ -418,12 +418,12 @@ private void opcionesAmbos(){
 	alpha = 0.50f;
 }
 
-private void opcionesBordes(){
+/*private void opcionesBordes(){
 	
 	BasicComponentBuilder builder = new BasicComponentBuilder(this,panelDeOpciones);
-	label_scrollBarBordes = builder.construirLabel("Umbral de la imagen: ",0, 1); //+data.getUmbralOptimoOtsu()
+	label_scrollBarBordes = builder.construirLabel("Umbral de la imagen: ",0, 1); //
 	scrollBarBordes = builder.construirScrollBar(0, 2);
-}
+}*/
 	
 	//Construir del panel de acciones
 	private void contruirPanelDeOpciones(){
@@ -433,7 +433,7 @@ private void opcionesBordes(){
 		this.opcionesDeCurvasDeNivel();
 		this.opcionesDeAltura();
 		this.opcionesDeExportarDeDatos();
-		this.opcionesBordes();
+		//this.opcionesBordes();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(10, 10, 10, 10);
@@ -517,10 +517,10 @@ private void opcionesBordes(){
 		label_ColoresContorno.setVisible(bool);
 	}
 	
-	private void setVisibilidadScrollBarBordes(boolean bool){
+	/*private void setVisibilidadScrollBarBordes(boolean bool){
 		label_scrollBarBordes.setVisible(bool);
-		scrollBarBordes.setVisible(bool);
-	}
+		//scrollBarBordes.setVisible(bool);
+	}*/
 		
 	private void setVisibilidadFiltrosCurvasDeNivel(boolean bool){
 		input_IntervaloEntreCurvas.setVisible(bool);
@@ -650,7 +650,8 @@ private void opcionesBordes(){
 		
 		if (bordesSeleccionado){
 			imagen = data.getImagenBordes();
-		}else this.setVisibilidadScrollBarBordes(false);
+			panelDeOpciones.setBorder(null);
+		}//else this.setVisibilidadScrollBarBordes(false);
 				
 		if (curvasDeNivelSeleccionado){									
 			
