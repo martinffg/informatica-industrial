@@ -281,8 +281,8 @@ public class SensorDataProduction implements SensorData {
 		return estadoExportacion;	
 	}
 	
-	public BufferedImage getImagenBordes() {
-		//int umbral=200;
+	public BufferedImage getImagenBordesSobel() {
+		
 		BufferedImage buff = this.imagenColor;
 		BufferedImage salida=null;
 		if (buff!=null){
@@ -294,7 +294,41 @@ public class SensorDataProduction implements SensorData {
 			Imagen matrizResultadoBuff = convertirMatrizEnBuff(matrizResultado,buff.getWidth(), buff.getHeight()); 
 			// Aplico la TL a la matriz de borde
 			//salida = umbralizarPyS(matrizResultado,buff.getWidth(),buff.getHeight(), umbral);
+			
+		
+			
 			salida = umbralizarConOtsu(matrizResultadoBuff);
+		}
+				
+		return salida;
+	}
+	
+	
+	public BufferedImage getImagenBordesCanny() {
+		//int umbral=200;
+		BufferedImage buff = this.imagenColor;
+		BufferedImage salida=null;
+		if (buff!=null){
+			Integer[][] matrizResultado =new Integer[buff.getWidth()][buff.getHeight()];
+			int[][] matrizMascaraY= {{-1,-2,-1},{0,0,0},{1,2,1}};
+			int[][] matrizMascaraX={{-1,0,1},{-2,0,2},{-1,0,1}};
+			// Obtengo la matriz de magnitud de borde
+			matrizResultado =obtenerMatrizPyS(buff, buff.getWidth(), buff.getHeight(), matrizMascaraX, matrizMascaraY);
+			Imagen matrizResultadoBuff = convertirMatrizEnBuff(matrizResultado,buff.getWidth(), buff.getHeight()); 
+			
+			Canny  detector = new Canny ();
+
+			//adjust its parameters as desired
+			detector.setLowThreshold(3f);
+			detector.setHighThreshold(5f);
+
+			//apply it to an image
+			detector.setSourceImage(matrizResultadoBuff);
+			detector.process();
+			BufferedImage edges = detector.getEdgesImage();
+			salida=edges;
+			
+			
 		}
 				
 		return salida;

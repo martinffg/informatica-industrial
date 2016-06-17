@@ -60,13 +60,19 @@ public class SensorDataTesting implements SensorData {
 	}
 
 	@Override
-	public BufferedImage getImagenBordes() {
+	public BufferedImage getImagenBordesSobel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
 	public int getUmbralOptimoOtsu(){
 		return 0;
+	}
+
+	@Override
+	public BufferedImage getImagenBordesCanny() {
+		// TODO Auto-generated method stub
+		return null;
 	};	
 	
 }

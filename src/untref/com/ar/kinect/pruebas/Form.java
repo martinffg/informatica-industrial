@@ -74,7 +74,7 @@ public class Form extends JFrame implements ActionListener {
 	private JMenu menuAyuda;
 	private JPanel panelDeOpciones;
 	private JPanel panelDeOpcionesBordes;
-	private boolean colorSeleccionado,profundidadSeleccionada,ambosSeleccionado,alturaSeleccionada, curvasDeNivelSeleccionado, importarDatosSeleccionado,bordesSeleccionado;
+	private boolean colorSeleccionado,profundidadSeleccionada,ambosSeleccionado,alturaSeleccionada, curvasDeNivelSeleccionado, importarDatosSeleccionado,bordesSeleccionadoSobel,bordesSeleccionadoCanny;
 	
 	private void setOpcionesDeSeleccion(boolean valor){
 		
@@ -84,7 +84,8 @@ public class Form extends JFrame implements ActionListener {
 		alturaSeleccionada = valor;
 		curvasDeNivelSeleccionado = valor;
 		importarDatosSeleccionado = valor;
-		bordesSeleccionado=valor;
+		bordesSeleccionadoSobel=valor;
+		bordesSeleccionadoCanny=valor;
 	}
 	
 	public void setValorAltura(int altura){
@@ -138,9 +139,14 @@ public class Form extends JFrame implements ActionListener {
 		if (e.getSource() == menuVistas.getItem(6)){			 
 			//title = "";//"Panel de Bordes";
 			//this.setVisibilidadScrollBarBordes(false);
-			bordesSeleccionado = true;
+			bordesSeleccionadoSobel = true;
 		}
 		
+		if (e.getSource() == menuVistas.getItem(7)){			 
+			//title = "";//"Panel de Bordes";
+			//this.setVisibilidadScrollBarBordes(false);
+			bordesSeleccionadoCanny = true;
+		}
 		if (e.getSource() == menuAyuda.getItem(1)){
 			
 			try {
@@ -287,9 +293,13 @@ public class Form extends JFrame implements ActionListener {
         mi5.addActionListener(this);
         menuVistas.add(mi5);
         
-        JMenuItem mi6=new JMenuItem("Imagenes de Bordes");
+        JMenuItem mi6=new JMenuItem("Imagenes de Bordes - SOBEL-OTSU");
         mi6.addActionListener(this);
         menuVistas.add(mi6);
+        
+        JMenuItem mi7=new JMenuItem("Imagenes de Bordes - CANNY");
+        mi7.addActionListener(this);
+        menuVistas.add(mi7);
         
        return menuVistas;
 	}
@@ -648,8 +658,13 @@ private void opcionesAmbos(){
 		else 
 			this.setVisibilidadScrollBar(false);
 		
-		if (bordesSeleccionado){
-			imagen = data.getImagenBordes();
+		if (bordesSeleccionadoSobel){
+			imagen = data.getImagenBordesSobel();
+			panelDeOpciones.setBorder(null);
+		}//else this.setVisibilidadScrollBarBordes(false);
+				
+		if (bordesSeleccionadoCanny){
+			imagen = data.getImagenBordesCanny();
 			panelDeOpciones.setBorder(null);
 		}//else this.setVisibilidadScrollBarBordes(false);
 				
