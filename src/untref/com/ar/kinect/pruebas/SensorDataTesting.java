@@ -59,7 +59,6 @@ public class SensorDataTesting implements SensorData {
 		return true;
 	}
 
-	@Override
 	public BufferedImage getImagenBordesSobel() {
 		// TODO Auto-generated method stub
 		return null;
@@ -69,8 +68,20 @@ public class SensorDataTesting implements SensorData {
 		return 0;
 	}
 
+	public BufferedImage getImagenBordesCanny(float l, float a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
-	public BufferedImage getImagenBordesCanny() {
+	public BufferedImage getImagenBordesSobel(boolean isHough) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BufferedImage getImagenBordesCanny(float alpha, float beta,
+			boolean isHough) {
 		// TODO Auto-generated method stub
 		return null;
 	};	

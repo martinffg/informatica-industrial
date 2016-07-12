@@ -21,8 +21,8 @@ public interface SensorData {
 	
 	public boolean exportarDatos(String path);
 	
-	public BufferedImage getImagenBordesSobel();
-	public BufferedImage getImagenBordesCanny();
+	public BufferedImage getImagenBordesSobel(boolean isHough);
+	public BufferedImage getImagenBordesCanny(float alpha, float beta, boolean isHough);
 	
 	public int getUmbralOptimoOtsu();	
 }

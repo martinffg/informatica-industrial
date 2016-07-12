@@ -142,7 +142,38 @@ public JScrollBar construirScrollBar(int posX,int posY){
 		@Override
 		public void adjustmentValueChanged(AdjustmentEvent arg0) {
 
-			form.setAlpha((float) scrollBar.getValue() / 100);
+			form.setAlpha((float) scrollBar.getValue() /100);
+		}
+	});
+	
+	scrollBar.setVisible(false);
+	
+	GridBagConstraints c = new GridBagConstraints();
+	c.weightx = 1;	
+	c.anchor = GridBagConstraints.WEST;
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = posX;
+	c.gridy = posY;
+	c.insets = new Insets(5, 5, 5, 5);					
+	panel.add(scrollBar, c);
+	
+	return scrollBar;
+	
+}
+
+public JScrollBar construirScrollBarAlta(int posX,int posY){
+	
+	final JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
+	scrollBar.setMaximum(100);
+	scrollBar.setMinimum(0);
+	scrollBar.setVisibleAmount(0);
+	scrollBar.setValue(5);
+	scrollBar.addAdjustmentListener(new AdjustmentListener() {
+
+		@Override
+		public void adjustmentValueChanged(AdjustmentEvent arg0) {
+
+			form.setBeta((float) scrollBar.getValue() );
 		}
 	});
 	

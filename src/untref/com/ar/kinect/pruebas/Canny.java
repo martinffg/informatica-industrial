@@ -4,43 +4,14 @@ import java.awt.image.BufferedImage;
 
 public class Canny {
 	
-	/**
-	 * <p><em>This software has been released into the public domain.
-	 * <strong>Please read the notes in this source file for additional information.
-	 * </strong></em></p>
-	 * 
-	 * <p>This class provides a configurable implementation of the Canny edge
-	 * detection algorithm. This classic algorithm has a number of shortcomings,
-	 * but remains an effective tool in many scenarios. <em>This class is designed
-	 * for single threaded use only.</em></p>
-	 * 
-	 * <p>Sample usage:</p>
-	 * 
-	 * <pre><code>
-	 * //create the detector
-	 * CannyEdgeDetector detector = new CannyEdgeDetector();
-	 * //adjust its parameters as desired
-	 * detector.setLowThreshold(0.5f);
-	 * detector.setHighThreshold(1f);
-	 * //apply it to an image
-	 * detector.setSourceImage(frame);
-	 * detector.process();
-	 * BufferedImage edges = detector.getEdgesImage();
-	 * </code></pre>
-	 * 
-	 * <p>For a more complete understanding of this edge detector's parameters
-	 * consult an explanation of the algorithm.</p>
-	 * 
-	 * @author Tom Gibara
-	 *
-	 */
+	
 
 	
 
 		// statics
 		
 		private final static float GAUSSIAN_CUT_OFF = 0.05f;
-		private final static float MAGNITUDE_SCALE = 100F;
+		private final static float MAGNITUDE_SCALE = 10F;
 		private final static float MAGNITUDE_LIMIT = 1000F;
 		private final static int MAGNITUDE_MAX = (int) (MAGNITUDE_SCALE * MAGNITUDE_LIMIT);
 
@@ -72,7 +43,14 @@ public class Canny {
 		 */
 		
 		public Canny() {
-			lowThreshold = 2.5f;
+			lowThreshold = 5f;
+			highThreshold = 7.5f;
+			gaussianKernelRadius = 5f;
+			gaussianKernelWidth = 16;
+			contrastNormalized = false;
+		}
+		public void setlowThreshold(float val){
+			lowThreshold = val;
 			highThreshold = 7.5f;
 			gaussianKernelRadius = 2f;
 			gaussianKernelWidth = 16;
