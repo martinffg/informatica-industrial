@@ -141,7 +141,7 @@ public JScrollBar construirScrollBar(int posX,int posY){
 
 		@Override
 		public void adjustmentValueChanged(AdjustmentEvent arg0) {
-
+form.actualizarLabel();
 			form.setAlpha((float) scrollBar.getValue() /100);
 		}
 	});
@@ -164,16 +164,19 @@ public JScrollBar construirScrollBar(int posX,int posY){
 public JScrollBar construirScrollBarAlta(int posX,int posY){
 	
 	final JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
-	scrollBar.setMaximum(100);
+	scrollBar.setMaximum(15);
 	scrollBar.setMinimum(0);
 	scrollBar.setVisibleAmount(0);
-	scrollBar.setValue(5);
+	scrollBar.setValue(1);
+	 
+ 
 	scrollBar.addAdjustmentListener(new AdjustmentListener() {
 
 		@Override
 		public void adjustmentValueChanged(AdjustmentEvent arg0) {
 
-			form.setBeta((float) scrollBar.getValue() );
+			form.setBeta((float) ((float) scrollBar.getValue()) );
+			form.actualizarLabel();
 		}
 	});
 	
@@ -192,6 +195,39 @@ public JScrollBar construirScrollBarAlta(int posX,int posY){
 	
 }
 
+
+public JScrollBar construirScrollBarBaja(int posX,int posY){
+	
+	final JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
+	scrollBar.setMaximum(30);
+	scrollBar.setMinimum(0);
+	scrollBar.setVisibleAmount(0);
+	scrollBar.setValue(2);
+ 
+	scrollBar.addAdjustmentListener(new AdjustmentListener() {
+
+		@Override
+		public void adjustmentValueChanged(AdjustmentEvent arg0) {
+
+			form.setGama((float) scrollBar.getValue() );
+			form.actualizarLabel();
+		}
+	});
+	
+	scrollBar.setVisible(false);
+	
+	GridBagConstraints c = new GridBagConstraints();
+	c.weightx = 1;	
+	c.anchor = GridBagConstraints.WEST;
+	c.fill = GridBagConstraints.HORIZONTAL;
+	c.gridx = posX;
+	c.gridy = posY;
+	c.insets = new Insets(5, 5, 5, 5);					
+	panel.add(scrollBar, c);
+	
+	return scrollBar;
+	
+}
 public Form getForm() {
 	return form;
 }

@@ -32,7 +32,7 @@ public class Hough  {
     } 
  
     // The size of the neighbourhood in which to search for other local maxima 
-    final int neighbourhoodSize = 16; 
+    final int neighbourhoodSize = 30; 
  
     // How many discrete values of theta shall we check? 
     final int maxTheta =90; 

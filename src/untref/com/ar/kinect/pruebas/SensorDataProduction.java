@@ -317,7 +317,7 @@ public class SensorDataProduction implements SensorData {
 			Canny detector = new Canny();
 
 			// adjust its parameters as desired
-			detector.setLowThreshold(lowThreshold * 10);
+			detector.setLowThreshold(lowThreshold );
 			detector.setHighThreshold(highThreshold);
 
 			// apply it to an image

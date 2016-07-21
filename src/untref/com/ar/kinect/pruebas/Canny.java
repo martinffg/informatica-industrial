@@ -11,7 +11,7 @@ public class Canny {
 		// statics
 		
 		private final static float GAUSSIAN_CUT_OFF = 0.05f;
-		private final static float MAGNITUDE_SCALE = 10F;
+		private final static float MAGNITUDE_SCALE = 100F;
 		private final static float MAGNITUDE_LIMIT = 1000F;
 		private final static int MAGNITUDE_MAX = (int) (MAGNITUDE_SCALE * MAGNITUDE_LIMIT);
 
@@ -43,9 +43,9 @@ public class Canny {
 		 */
 		
 		public Canny() {
-			lowThreshold = 5f;
+			lowThreshold = 2.5f;
 			highThreshold = 7.5f;
-			gaussianKernelRadius = 5f;
+			gaussianKernelRadius = 2f;
 			gaussianKernelWidth = 16;
 			contrastNormalized = false;
 		}

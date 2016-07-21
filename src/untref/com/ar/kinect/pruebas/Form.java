@@ -81,6 +81,7 @@ public class Form extends JFrame implements ActionListener {
 	private boolean colorSeleccionado, profundidadSeleccionada, ambosSeleccionado, alturaSeleccionada,
 			curvasDeNivelSeleccionado, importarDatosSeleccionado, bordesSeleccionadoSobel, bordesSeleccionadoCanny;
 	private float Beta;
+	private float gama;
 
 	private void setOpcionesDeSeleccion(boolean valor) {
 
@@ -302,11 +303,11 @@ public class Form extends JFrame implements ActionListener {
 		mi5.addActionListener(this);
 		menuVistas.add(mi5);
 
-		JMenuItem mi6 = new JMenuItem("Bordes y Rectas - SOBEL-OTSU+HUGH");
+		JMenuItem mi6 = new JMenuItem("Rectas con Bordes SOBEL-OTSU");
 		mi6.addActionListener(this);
 		menuVistas.add(mi6);
 
-		JMenuItem mi7 = new JMenuItem("Bordes y Rectas - CANNY+HUGH");
+		JMenuItem mi7 = new JMenuItem("Rectas con Bordes CANNY");
 		mi7.addActionListener(this);
 		menuVistas.add(mi7);
 
@@ -452,23 +453,17 @@ public class Form extends JFrame implements ActionListener {
 
 		BasicComponentBuilder builder = new BasicComponentBuilder(this, panelDeOpciones);
 		label_scrollBarBordesCannyUmbralBajo = builder.construirLabel("Umbral Bajo: ", 0, 10); //
-		scrollBarBordesCannyUmbralBajo = builder.construirScrollBar(0, 11);
+		scrollBarBordesCannyUmbralBajo = builder.construirScrollBarBaja(0, 11);
 
-		label_scrollBarBordesCannyUmbralAlto = builder.construirLabel("Umbral Alto: ", 0, 12); //
+		label_scrollBarBordesCannyUmbralAlto = builder.construirLabel("Umbral Alto:  ", 0, 12); //
 
 		scrollBarBordesCannyUmbralAlto = builder.construirScrollBarAlta(0, 13);
 
 		radioButtonBordes(0, 1, builder);
-		/*
-		 * radioHougHSi = builder.construirRadioButton("Activar Hough", 0, 1);
-		 * radioHougHNo = builder.construirRadioButton("Desactivar Hough", 0,
-		 * 2); radioHougHNo.setSelected(true); ButtonGroup radioButtonsHough =
-		 * new ButtonGroup(); radioButtonsHough.add(radioHougHSi);
-		 * radioButtonsHough.add(radioHougHNo);
-		 */
+		this.gama = 2f;
 
-		this.Beta = 5f;
-
+		this.Beta = 1f;
+		this.actualizarLabel();
 	}
 
 	// Construir del panel de acciones
@@ -672,6 +667,13 @@ public class Form extends JFrame implements ActionListener {
 		kinect.start(Kinect.DEPTH | Kinect.COLOR | Kinect.SKELETON | Kinect.XYZ | Kinect.PLAYER_INDEX);
 	}
 
+	public void actualizarLabel() {
+		
+		label_scrollBarBordesCannyUmbralBajo.setText("Umbral Bajo: " + this.gama);
+		label_scrollBarBordesCannyUmbralAlto.setText("Umbral Alto: " + this.Beta);
+
+	}
+
 	public void actualizar() {
 
 		if (!testing)
@@ -682,7 +684,7 @@ public class Form extends JFrame implements ActionListener {
 		BufferedImage imagen = data.getImagenColor();
 
 		if (!alturaSeleccionada) {
-			//setVisibilidadFiltroHough(false);
+			// setVisibilidadFiltroHough(false);
 			this.setVisibilidadFiltrosAltura(false);
 		}
 
@@ -693,7 +695,7 @@ public class Form extends JFrame implements ActionListener {
 		}
 
 		if (profundidadSeleccionada) {
-			//setVisibilidadFiltroHough(false);
+			// setVisibilidadFiltroHough(false);
 			float dist = Float.parseFloat(combo_DistanciaObstaculos.getSelectedItem().toString());
 			int cantPixeles = Integer.parseInt(combo_cantPixeles.getSelectedItem().toString());
 			data.setPixelColorPorProfundidad(dist * 10000, cantPixeles, this.getColorContorno());
@@ -703,7 +705,7 @@ public class Form extends JFrame implements ActionListener {
 			this.setVisibleFiltrosProfundidad(false);
 
 		if (ambosSeleccionado) {
-			//setVisibilidadFiltroHough(false);
+			// setVisibilidadFiltroHough(false);
 			imagen = both(data.getImagenColor(), data.getImagenProfundidad());
 		} else
 			this.setVisibilidadScrollBar(false);
@@ -721,8 +723,8 @@ public class Form extends JFrame implements ActionListener {
 			boolean hough = false;
 			if (radioHougHSi.isSelected())
 				hough = true;
-
-			imagen = data.getImagenBordesCanny(alpha, this.Beta, hough);
+			
+			imagen = data.getImagenBordesCanny(gama, this.Beta, hough);
 			panelDeOpciones.setBorder(null);
 
 		} else {
@@ -764,5 +766,10 @@ public class Form extends JFrame implements ActionListener {
 		g.drawImage(overlay, 0, 0, null);
 
 		return combined;
+	}
+
+	public void setGama(float value) {
+		this.gama = value;
+
 	}
 }
